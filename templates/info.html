@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information - Heart Disease Predictor</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e63946',
+                        secondary: '#457b9d',
+                        light: '#f1faee',
+                        dark: '#1d3557',
+                        success: '#2a9d8f',
+                        warning: '#e9c46a',
+                        danger: '#e76f51'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a class="flex items-center text-2xl font-bold text-primary" href="/">
+                    <i class="fas fa-heartbeat mr-2"></i>Heart Disease Predictor
+                </a>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-gray-700 hover:text-primary font-medium transition-colors duration-300" href="/">Home</a>
+                    <a class="text-gray-700 hover:text-primary font-medium transition-colors duration-300" href="/dashboard">Dashboard</a>
+                    <a class="text-primary font-medium border-b-2 border-primary" href="/info">Information</a>
+                    <a class="text-gray-700 hover:text-primary font-medium transition-colors duration-300" href="/about">About</a>
+                </div>
+            </div>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a class="block py-2 text-gray-700 hover:text-primary" href="/">Home</a>
+                <a class="block py-2 text-gray-700 hover:text-primary" href="/dashboard">Dashboard</a>
+                <a class="block py-2 text-primary font-medium" href="/info">Information</a>
+                <a class="block py-2 text-gray-700 hover:text-primary" href="/about">About</a>
+            </div>
+        </div>
+    </nav>
+    
+    <script>
+        // Toggle mobile menu
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-50 to-indigo-50 py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-dark mb-6">Understanding Heart Disease</h1>
+                <p class="text-xl text-gray-600">Learn more about heart disease, risk factors, and how our prediction model works.</p>
+            </div>
+        </div>
+    </section>    <!-- Info Content -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <!-- About Heart Disease -->
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold text-dark mb-8 text-center">About Heart Disease</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-xl font-semibold text-primary mb-4">What is Heart Disease?</h3>
+                        <p class="text-gray-700">Heart disease refers to various types of conditions that affect the heart or blood vessels. It's the leading cause of death globally. The term "heart disease" encompasses several conditions, including coronary artery disease, arrhythmias, heart defects, and more.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-xl font-semibold text-primary mb-4">Common Symptoms</h3>
+                        <ul class="text-gray-700 list-disc pl-5 space-y-2">
+                            <li>Chest pain or discomfort (angina)</li>
+                            <li>Shortness of breath</li>
+                            <li>Pain or numbness in the arms or legs</li>
+                            <li>Dizziness or fatigue</li>
+                            <li>Irregular heartbeat</li>
+                            <li>Swelling in legs, ankles, or feet</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>            <!-- Risk Factors -->
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold text-dark mb-8 text-center">Risk Factors</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-t-4 border-primary">
+                        <h3 class="text-xl font-semibold text-primary mb-3">Age</h3>
+                        <p class="text-gray-700">The risk of heart disease increases as you get older, especially after age 45 for men and 55 for women.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-t-4 border-primary">
+                        <h3 class="text-xl font-semibold text-primary mb-3">Sex</h3>
+                        <p class="text-gray-700">Men are generally at greater risk of heart disease. However, women's risk increases after menopause.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-t-4 border-primary">
+                        <h3 class="text-xl font-semibold text-primary mb-3">Family History</h3>
+                        <p class="text-gray-700">A family history of heart disease increases your risk, especially if a parent developed it at an early age.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-t-4 border-primary">
+                        <h3 class="text-xl font-semibold text-primary mb-3">Blood Pressure</h3>
+                        <p class="text-gray-700">High blood pressure can damage your arteries and heart, increasing your risk of heart disease.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-t-4 border-primary">
+                        <h3 class="text-xl font-semibold text-primary mb-3">Cholesterol Levels</h3>
+                        <p class="text-gray-700">High levels of cholesterol in your blood can increase the risk of plaque formation in your arteries.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-t-4 border-primary">
+                        <h3 class="text-xl font-semibold text-primary mb-3">Diabetes</h3>
+                        <p class="text-gray-700">Diabetes significantly increases your risk of developing heart disease.</p>
+                    </div>
+                </div>
+            </div>            <!-- Prevention -->
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold text-dark mb-8 text-center">Prevention</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-l-4 border-success">
+                        <div class="text-success text-4xl mb-4">
+                            <i class="fas fa-apple-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-dark mb-3">Healthy Diet</h3>
+                        <p class="text-gray-700">Eat a diet rich in fruits, vegetables, whole grains, lean proteins, and healthy fats. Limit salt, sugar, and unhealthy fats.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-l-4 border-success">
+                        <div class="text-success text-4xl mb-4">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-dark mb-3">Regular Exercise</h3>
+                        <p class="text-gray-700">Aim for at least 150 minutes of moderate exercise or 75 minutes of vigorous exercise each week.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border-l-4 border-success">
+                        <div class="text-success text-4xl mb-4">
+                            <i class="fas fa-smoking-ban"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-dark mb-3">Avoid Smoking</h3>
+                        <p class="text-gray-700">Smoking is a major risk factor for heart disease. If you smoke, quit; if you don't, don't start.</p>
+                    </div>
+                </div>
+            </div>            <!-- Our Model -->
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold text-dark mb-8 text-center">About Our Prediction Model</h2>
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="mb-6">
+                        <h4 class="text-xl font-semibold text-primary mb-3">Machine Learning Approach</h4>
+                        <p class="text-gray-700">Our heart disease prediction model uses a Logistic Regression algorithm trained on clinical data. The model analyzes several health parameters to estimate the likelihood of heart disease.</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-xl font-semibold text-primary mb-3">Model Performance</h4>
+                        <p class="text-gray-700">The model has been trained and evaluated on a dataset of heart disease patients. It achieves a high accuracy in predicting the presence or absence of heart disease based on the provided parameters.</p>
+                    </div>
+                    
+                    <div class="bg-red-50 border-l-4 border-danger p-4 rounded">
+                        <h4 class="text-xl font-semibold text-danger mb-2">Important Note</h4>
+                        <p class="text-gray-700">This prediction tool is designed for educational purposes and should not replace professional medical advice. Always consult with a healthcare provider for proper diagnosis and treatment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center my-12">
+                <a href="/" class="bg-primary hover:bg-red-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-300 inline-block">Make a Prediction</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Heart Disease Prediction App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', path='/js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Heart Disease Prediction</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e63946',
+                        secondary: '#457b9d',
+                        light: '#f1faee',
+                        dark: '#1d3557',
+                        success: '#2a9d8f',
+                        warning: '#e9c46a',
+                        danger: '#e76f51'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a class="flex items-center text-2xl font-bold text-primary" href="/">
+                    <i class="fas fa-heartbeat mr-2"></i>Heart Disease Predictor
+                </a>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-gray-700 hover:text-primary font-medium transition-colors duration-300" href="/">Home</a>
+                    <a class="text-gray-700 hover:text-primary font-medium transition-colors duration-300" href="/dashboard">Dashboard</a>
+                    <a class="text-gray-700 hover:text-primary font-medium transition-colors duration-300" href="/info">Information</a>
+                    <a class="text-primary font-medium border-b-2 border-primary" href="/about">About</a>
+                </div>
+            </div>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a class="block py-2 text-gray-700 hover:text-primary" href="/">Home</a>
+                <a class="block py-2 text-gray-700 hover:text-primary" href="/dashboard">Dashboard</a>
+                <a class="block py-2 text-gray-700 hover:text-primary" href="/info">Information</a>
+                <a class="block py-2 text-primary font-medium" href="/about">About</a>
+            </div>
+        </div>
+    </nav>
+    
+    <script>
+        // Toggle mobile menu
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-50 to-indigo-50 py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-dark mb-6">About This Project</h1>
+                <p class="text-xl text-gray-600 mb-8">Learn about the Heart Disease Prediction project, its methodology, and the technology behind it.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Project Overview -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-bold text-dark mb-6">Project Overview</h2>
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <p class="text-gray-700 mb-4">
+                            The Heart Disease Prediction project is a machine learning application designed to predict the likelihood of heart disease based on various health parameters. Heart disease is one of the leading causes of death globally, and early prediction can significantly improve patient outcomes through timely intervention.
+                        </p>
+                        <p class="text-gray-700 mb-4">
+                            This project uses a dataset containing medical and demographic information from patients, along with their heart disease diagnosis. We've trained a machine learning model on this data to identify patterns and relationships that might indicate the presence of heart disease.
+                        </p>
+                        <p class="text-gray-700">
+                            The web application provides an intuitive interface for users to input their health data and receive a prediction about their heart disease risk, along with visualizations to help understand the patterns in the dataset.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Methodology -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-bold text-dark mb-6">Methodology</h2>
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-xl font-semibold text-primary mb-4">Data Collection and Processing</h3>
+                        <p class="text-gray-700 mb-6">
+                            We used a publicly available heart disease dataset containing features such as age, sex, chest pain type, blood pressure, cholesterol, and other medical parameters. The data was cleaned and processed to handle any missing values and prepare it for training.
+                        </p>
+
+                        <h3 class="text-xl font-semibold text-primary mb-4">Feature Engineering and Selection</h3>
+                        <p class="text-gray-700 mb-6">
+                            We analyzed the correlation between different features and the target variable (presence of heart disease). Features were standardized to ensure all variables contribute equally to the model.
+                        </p>
+
+                        <h3 class="text-xl font-semibold text-primary mb-4">Model Development</h3>
+                        <p class="text-gray-700 mb-6">
+                            We used a Logistic Regression model for this task as it provides good performance for binary classification problems and offers easily interpretable results. The model was trained on 80% of the data and tested on the remaining 20%.
+                        </p>
+
+                        <h3 class="text-xl font-semibold text-primary mb-4">Evaluation</h3>
+                        <p class="text-gray-700">
+                            The model was evaluated using metrics such as accuracy, precision, recall, and F1-score. We also used confusion matrices to visualize the model's performance. Our model achieved a high accuracy score, indicating reliable predictions.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Technologies Used -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-bold text-dark mb-6">Technologies Used</h2>
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <h3 class="text-xl font-semibold text-primary mb-2">Python</h3>
+                                <p class="text-gray-700">Primary programming language used for data processing, analysis, and model development.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <h3 class="text-xl font-semibold text-primary mb-2">Pandas & NumPy</h3>
+                                <p class="text-gray-700">Libraries used for data manipulation and numerical operations.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <h3 class="text-xl font-semibold text-primary mb-2">Scikit-learn</h3>
+                                <p class="text-gray-700">Machine learning library used for model training, evaluation, and feature scaling.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <h3 class="text-xl font-semibold text-primary mb-2">Matplotlib & Seaborn</h3>
+                                <p class="text-gray-700">Libraries used for data visualization and creating insightful plots.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <h3 class="text-xl font-semibold text-primary mb-2">FastAPI</h3>
+                                <p class="text-gray-700">Modern, fast web framework for building the API and serving the application.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <h3 class="text-xl font-semibold text-primary mb-2">Tailwind CSS</h3>
+                                <p class="text-gray-700">Utility-first CSS framework for creating a responsive and beautiful user interface.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Future Enhancements -->
+                <div>
+                    <h2 class="text-3xl font-bold text-dark mb-6">Future Enhancements</h2>
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <ul class="list-disc pl-6 space-y-3 text-gray-700">
+                            <li>Implementation of more advanced machine learning models such as Random Forests, Gradient Boosting, and Neural Networks to potentially improve prediction accuracy.</li>
+                            <li>Integration of real-time user feedback to continuously improve the model.</li>
+                            <li>Addition of more comprehensive explanations of predictions using SHAP values or other explainable AI techniques.</li>
+                            <li>Development of a mobile application for more accessible health monitoring.</li>
+                            <li>Integration with wearable health devices for automatic health data collection.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Heart Disease Prediction App. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

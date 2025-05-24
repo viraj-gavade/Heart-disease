@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Dashboard - Heart Disease Predictor</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e63946',
+                        secondary: '#457b9d',
+                        light: '#f1faee',
+                        dark: '#1d3557',
+                        success: '#2a9d8f',
+                        warning: '#e9c46a',
+                        danger: '#e76f51'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .dashboard-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+            cursor: pointer;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .viz-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        .modal-img {
+            max-width: 100%;
+        }
+        
+        .feature-importance {
+            margin-top: 2rem;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 60vh;
+            width: 100%;
+        }
+        
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a class="flex items-center text-2xl font-bold text-primary" href="/">
+                    <i class="fas fa-heartbeat mr-2"></i>Heart Disease Predictor
+                </a>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-gray-700 hover:text-primary font-medium transition-colors duration-300" href="/">Home</a>
+                    <a class="text-gray-700 hover:text-primary font-medium transition-colors duration-300" href="/info">Information</a>
+                    <a class="text-primary font-medium border-b-2 border-primary" href="/dashboard">Dashboard</a>
+                </div>
+            </div>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a class="block py-2 text-gray-700 hover:text-primary" href="/">Home</a>
+                <a class="block py-2 text-gray-700 hover:text-primary" href="/info">Information</a>
+                <a class="block py-2 text-primary font-medium" href="/dashboard">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+    
+    <script>
+        // Toggle mobile menu
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-gray-100 to-gray-200 py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-dark mb-4">Heart Disease Data Dashboard</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore visualizations and insights from our heart disease dataset.</p>
+            </div>
+        </div>
+    </section>    <!-- Dashboard Content -->
+    <section class="py-12">
+        <div class="container mx-auto px-4"><!-- Key Metrics -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-dark mb-6">Key Metrics</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center transform transition-all duration-300 hover:-translate-y-2">
+                        <div class="text-primary text-3xl mb-4">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="text-4xl font-bold mb-2" id="total-patients">303</div>
+                        <div class="text-gray-500">Total Patients</div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center transform transition-all duration-300 hover:-translate-y-2">
+                        <div class="text-danger text-3xl mb-4">
+                            <i class="fas fa-heart-broken"></i>
+                        </div>
+                        <div class="text-4xl font-bold mb-2" id="heart-disease-count">165</div>
+                        <div class="text-gray-500">Heart Disease Cases</div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center transform transition-all duration-300 hover:-translate-y-2">
+                        <div class="text-success text-3xl mb-4">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="text-4xl font-bold mb-2" id="healthy-count">138</div>
+                        <div class="text-gray-500">Healthy Cases</div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center transform transition-all duration-300 hover:-translate-y-2">
+                        <div class="text-blue-500 text-3xl mb-4">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="text-4xl font-bold mb-2" id="disease-percentage">54.5%</div>
+                        <div class="text-gray-500">Disease Percentage</div>
+                    </div>
+                </div>
+            </div>
+              <!-- Interactive Charts -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-dark mb-6">Interactive Dashboard</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="bg-primary text-white p-4">
+                            <h3 class="text-lg font-semibold">Age Distribution</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="h-[400px]">
+                                <canvas id="ageChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="bg-primary text-white p-4">
+                            <h3 class="text-lg font-semibold">Heart Disease by Gender</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="h-[400px]">
+                                <canvas id="genderChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="bg-primary text-white p-4">
+                            <h3 class="text-lg font-semibold">Chest Pain Type Analysis</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="h-[400px]">
+                                <canvas id="chestPainChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="bg-primary text-white p-4">
+                            <h3 class="text-lg font-semibold">Feature Correlation</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="h-[400px]">
+                                <canvas id="correlationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            <!-- Static Visualizations -->
+            <div>
+                <h2 class="text-2xl font-bold text-dark mb-6">Detailed Visualizations</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {% for viz in visualizations %}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer" onclick="openModal('vizModal{{ loop.index }}')">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2 text-primary">{{ viz.title }}</h3>
+                            <p class="text-gray-600 mb-4">{{ viz.description }}</p>
+                            <img src="{{ url_for('static', path=viz.path) }}" alt="{{ viz.title }}" class="w-full h-auto rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <!-- Modal for visualization -->
+                    <div id="vizModal{{ loop.index }}" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-75 flex items-center justify-center p-4">
+                        <div class="bg-white rounded-xl max-w-4xl w-full mx-auto">
+                            <div class="flex justify-between items-center border-b p-4">
+                                <h3 class="text-xl font-semibold" id="vizModalLabel{{ loop.index }}">{{ viz.title }}</h3>
+                                <button type="button" class="text-gray-500 hover:text-gray-800" onclick="closeModal('vizModal{{ loop.index }}')">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="p-6 text-center">
+                                <img src="{{ url_for('static', path=viz.path) }}" alt="{{ viz.title }}" class="max-w-full h-auto mx-auto rounded-lg">
+                                <p class="mt-4 text-gray-600">{{ viz.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <script>
+                function openModal(id) {
+                    document.getElementById(id).classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
+                
+                function closeModal(id) {
+                    document.getElementById(id).classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }
+                
+                // Close modal when clicking outside
+                document.addEventListener('click', function(event) {
+                    const modals = document.querySelectorAll('[id^="vizModal"]');
+                    modals.forEach(function(modal) {
+                        if (event.target === modal) {
+                            closeModal(modal.id);
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </section>    <!-- Footer -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Heart Disease Prediction App. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', path='/js/script.js') }}"></script>
+    <!-- Interactive Charts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load data from API
+            fetch('/api/heart-data')
+                .then(response => response.json())
+                .then(data => {
+                    // Process data for charts
+                    createAgeDistributionChart(data);
+                    createGenderDistributionChart(data);
+                    createChestPainChart(data);
+                    createFeatureCorrelationChart(data);
+                })
+                .catch(error => console.error('Error loading data:', error));
+        });
+        
+        function createAgeDistributionChart(data) {
+            // Prepare age data
+            const ageGroups = ['30-40', '40-50', '50-60', '60-70', '70+'];
+            const diseaseByAge = [0, 0, 0, 0, 0];
+            const noDiseaseBuyAge = [0, 0, 0, 0, 0];
+            
+            data.forEach(patient => {
+                const age = patient.age;
+                const hasDisease = patient.target === 1;
+                
+                let groupIndex = 0;
+                if (age < 40) groupIndex = 0;
+                else if (age < 50) groupIndex = 1;
+                else if (age < 60) groupIndex = 2;
+                else if (age < 70) groupIndex = 3;
+                else groupIndex = 4;
+                
+                if (hasDisease) {
+                    diseaseByAge[groupIndex]++;
+                } else {
+                    noDiseaseBuyAge[groupIndex]++;
+                }
+            });
+            
+            // Create chart
+            const ctx = document.getElementById('ageChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ageGroups,
+                    datasets: [
+                        {
+                            label: 'Heart Disease',
+                            data: diseaseByAge,
+                            backgroundColor: 'rgba(230, 57, 70, 0.7)',
+                            borderColor: 'rgba(230, 57, 70, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'No Heart Disease',
+                            data: noDiseaseBuyAge,
+                            backgroundColor: 'rgba(42, 157, 143, 0.7)',
+                            borderColor: 'rgba(42, 157, 143, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Patients'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Age Groups'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Age Distribution and Heart Disease'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createGenderDistributionChart(data) {
+            // Count gender distribution
+            let maleDisease = 0, maleNoDisease = 0;
+            let femaleDisease = 0, femaleNoDisease = 0;
+            
+            data.forEach(patient => {
+                if (patient.sex === 1) { // Male
+                    if (patient.target === 1) maleDisease++;
+                    else maleNoDisease++;
+                } else { // Female
+                    if (patient.target === 1) femaleDisease++;
+                    else femaleNoDisease++;
+                }
+            });
+            
+            // Create chart
+            const ctx = document.getElementById('genderChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Male', 'Female'],
+                    datasets: [
+                        {
+                            label: 'Heart Disease',
+                            data: [maleDisease, femaleDisease],
+                            backgroundColor: 'rgba(230, 57, 70, 0.7)',
+                            borderColor: 'rgba(230, 57, 70, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'No Heart Disease',
+                            data: [maleNoDisease, femaleNoDisease],
+                            backgroundColor: 'rgba(42, 157, 143, 0.7)',
+                            borderColor: 'rgba(42, 157, 143, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Patients'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Heart Disease by Gender'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createChestPainChart(data) {
+            // Count chest pain types
+            const cpTypes = [
+                { disease: 0, noDisease: 0 }, // Type 0
+                { disease: 0, noDisease: 0 }, // Type 1
+                { disease: 0, noDisease: 0 }, // Type 2
+                { disease: 0, noDisease: 0 }  // Type 3
+            ];
+            
+            data.forEach(patient => {
+                const cpType = patient.cp;
+                const hasDisease = patient.target === 1;
+                
+                if (hasDisease) {
+                    cpTypes[cpType].disease++;
+                } else {
+                    cpTypes[cpType].noDisease++;
+                }
+            });
+            
+            // Create chart
+            const ctx = document.getElementById('chestPainChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Typical Angina', 'Atypical Angina', 'Non-Anginal Pain', 'Asymptomatic'],
+                    datasets: [
+                        {
+                            label: 'Heart Disease',
+                            data: cpTypes.map(cp => cp.disease),
+                            backgroundColor: 'rgba(230, 57, 70, 0.7)',
+                            borderColor: 'rgba(230, 57, 70, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'No Heart Disease',
+                            data: cpTypes.map(cp => cp.noDisease),
+                            backgroundColor: 'rgba(42, 157, 143, 0.7)',
+                            borderColor: 'rgba(42, 157, 143, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Patients'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Chest Pain Type'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Chest Pain Types and Heart Disease'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createFeatureCorrelationChart(data) {
+            // Select key features
+            const features = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak'];
+            const featureNames = ['Age', 'Blood Pressure', 'Cholesterol', 'Max Heart Rate', 'ST Depression'];
+            
+            // Calculate correlation with target
+            const correlations = [];
+            
+            features.forEach(feature => {
+                const diseaseValues = data.filter(p => p.target === 1).map(p => p[feature]);
+                const noDiseaseValues = data.filter(p => p.target === 0).map(p => p[feature]);
+                
+                const diseaseAvg = diseaseValues.reduce((a, b) => a + b, 0) / diseaseValues.length;
+                const noDiseaseAvg = noDiseaseValues.reduce((a, b) => a + b, 0) / noDiseaseValues.length;
+                
+                // Calculate a simple ratio between the two averages
+                // Not a true correlation but gives a visual representation
+                const ratio = Math.abs((diseaseAvg - noDiseaseAvg) / Math.max(diseaseAvg, noDiseaseAvg));
+                correlations.push(ratio);
+            });
+            
+            // Create chart
+            const ctx = document.getElementById('correlationChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: featureNames,
+                    datasets: [{
+                        label: 'Feature Importance',
+                        data: correlations,
+                        fill: true,
+                        backgroundColor: 'rgba(69, 123, 157, 0.2)',
+                        borderColor: 'rgb(69, 123, 157)',
+                        pointBackgroundColor: 'rgb(69, 123, 157)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(69, 123, 157)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: {
+                            borderWidth: 3
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Feature Importance'
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
