@@ -129,11 +129,7 @@ def generate_visualizations():
     heart_data_path = os.path.join(os.path.dirname(__file__), 'notebooks', 'heart.csv')
     heart_data = pd.read_csv(heart_data_path)
     
-    # Create a directory for visualizations if it doesn't exist
-    viz_dir = os.path.join(os.path.dirname(__file__), 'static', 'images', 'visualizations')
-    os.makedirs(viz_dir, exist_ok=True)
-    
-    # List to store visualization paths and descriptions
+    # List to store visualization data with base64 encoded images
     viz_data = []
     
     # 1. Age distribution by heart disease
@@ -144,13 +140,18 @@ def generate_visualizations():
     plt.ylabel('Count')
     plt.legend(['Disease Present', 'No Disease'])
     plt.tight_layout()
-    viz_path = f"{viz_dir}/age_distribution.png"
-    plt.savefig(viz_path)
+    
+    # Save to BytesIO buffer
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
     plt.close()
+    img_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    
     viz_data.append({
         "title": "Age Distribution",
         "description": "Distribution of age among patients with and without heart disease.",
-        "path": "images/visualizations/age_distribution.png"
+        "image_data": f"data:image/png;base64,{img_str}"
     })
     
     # 2. Gender distribution
@@ -160,14 +161,18 @@ def generate_visualizations():
     colors = ['#457b9d', '#e63946']
     plt.pie(gender_counts, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
     plt.title('Gender Distribution')
-    plt.tight_layout()    
-    viz_path = f"{viz_dir}/gender_distribution.png"
-    plt.savefig(viz_path)
+    plt.tight_layout()
+    
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
     plt.close()
+    img_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    
     viz_data.append({
         "title": "Gender Distribution",
         "description": "Distribution of gender in the dataset.",
-        "path": "images/visualizations/gender_distribution.png"
+        "image_data": f"data:image/png;base64,{img_str}"
     })
     
     # 3. Heart disease by gender
@@ -178,14 +183,18 @@ def generate_visualizations():
     plt.xlabel('Gender (0 = Female, 1 = Male)')
     plt.ylabel('Count')
     plt.legend(['Disease Present', 'No Disease'])
-    plt.tight_layout()    
-    viz_path = f"{viz_dir}/heart_disease_by_gender.png"
-    plt.savefig(viz_path)
+    plt.tight_layout()
+    
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
     plt.close()
+    img_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    
     viz_data.append({
         "title": "Heart Disease by Gender",
         "description": "Comparison of heart disease presence between males and females.",
-        "path": "images/visualizations/heart_disease_by_gender.png"
+        "image_data": f"data:image/png;base64,{img_str}"
     })
     
     # 4. Chest pain type and heart disease
@@ -196,14 +205,18 @@ def generate_visualizations():
     plt.xlabel('Chest Pain Type')
     plt.ylabel('Count')
     plt.legend(['Disease Present', 'No Disease'])
-    plt.tight_layout()    
-    viz_path = f"{viz_dir}/heart_disease_by_cp.png"
-    plt.savefig(viz_path)
+    plt.tight_layout()
+    
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
     plt.close()
+    img_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    
     viz_data.append({
         "title": "Heart Disease by Chest Pain Type",
         "description": "Relationship between different types of chest pain and heart disease presence.",
-        "path": "images/visualizations/heart_disease_by_cp.png"
+        "image_data": f"data:image/png;base64,{img_str}"
     })
     
     # 5. Correlation heatmap
@@ -211,14 +224,18 @@ def generate_visualizations():
     correlation = heart_data.corr()
     sns.heatmap(correlation, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
     plt.title('Correlation Heatmap of Heart Disease Features')
-    plt.tight_layout()    
-    viz_path = f"{viz_dir}/correlation_heatmap.png"
-    plt.savefig(viz_path)
+    plt.tight_layout()
+    
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
     plt.close()
+    img_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    
     viz_data.append({
         "title": "Correlation Heatmap",
         "description": "Correlation matrix showing relationships between different features.",
-        "path": "images/visualizations/correlation_heatmap.png"
+        "image_data": f"data:image/png;base64,{img_str}"
     })
     
     return viz_data
